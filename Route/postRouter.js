@@ -17,7 +17,7 @@ postRouter.post("/createPost", async (req, res) => {
     });
     res.send(newPost);
   } catch (error) {
-    res.send("err");
+    res.send(error);
     console.log(error);
   }
 });
