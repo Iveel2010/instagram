@@ -4,11 +4,13 @@ const { postModel } = require("../model/postSchema");
 const { userModel } = require("../model/userSchema");
 
 postRouter.post("/createPost", async (req, res) => {
-  const { description, postImage, user } = req.body;
+  const { description, postImage, user, proFileImage, userName } = req.body;
   try {
     const newPost = await postModel.create({
       description,
       postImage,
+      proFileImage,
+      userName,
     });
     await userModel.findByIdAndUpdate(user, {
       $push: {
