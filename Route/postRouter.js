@@ -10,7 +10,7 @@ postRouter.post("/createPost", async (req, res) => {
       description,
       postImage,
       proFileImage,
-      userName,
+      user,
     });
     await userModel.findByIdAndUpdate(user, {
       $push: {
@@ -23,13 +23,14 @@ postRouter.post("/createPost", async (req, res) => {
     console.log(error);
   }
 });
-
 postRouter.get("/post", async (req, res) => {
   try {
-    const post = await postModel.find();
-    res.send(post);
+    const users = await postModel
+      .find()
+      .populate("user", "userName profileImage");
+    res.send(users);
   } catch (error) {
-    res.send("err");
+    res.send(error);
     console.log(error);
   }
 });
