@@ -3,9 +3,9 @@ const { type } = require("os");
 
 const commentSchema = new Schema(
   {
-    userId: { type: Schema.Types.ObjectId, ref: "comment" },
+    userId: { type: Schema.Types.ObjectId, ref: "users" },
     comment: { type: String, required: true },
-    postId: { type: Schema.Types.ObjectId, ref: "comment" },
+    postId: { type: Schema.Types.ObjectId, ref: "post" },
   },
   {
     timestamps: true,

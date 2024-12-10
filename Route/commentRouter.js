@@ -1,7 +1,9 @@
 const Route = require("express");
-const commentRouter = Route();
 const { commentModel } = require("../model/commentSchema");
 const { postModel } = require("../model/postSchema");
+
+const commentRouter = Route();
+
 commentRouter.post("/comment", async (req, res) => {
   const { userId, comment, postId } = req.body;
   try {
@@ -21,6 +23,7 @@ commentRouter.post("/comment", async (req, res) => {
     console.log(error);
   }
 });
+
 commentRouter.post("/unComment", async (req, res) => {
   const { userId, comment, postId } = req.body;
   try {
@@ -40,4 +43,24 @@ commentRouter.post("/unComment", async (req, res) => {
     console.log(error);
   }
 });
+
+commentRouter.get("/getComment/:postId", async (req, res) => {
+  const { postId } = req.params;
+  console.log(postId, "hahahahahahah");
+  try {
+    // const response = await postModel.findById(postId, "comments");
+    const comment = await postModel.findById(postId).populate({
+      path: "comments",
+      populate: {
+        path: "userId",
+        select: "userName profileImage",
+      },
+    });
+    res.send(comment);
+  } catch (error) {
+    res.send("err");
+    console.log(error);
+  }
+});
+
 module.exports = commentRouter;
