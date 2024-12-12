@@ -2,6 +2,7 @@ const Route = require("express");
 const postRouter = Route();
 const { postModel } = require("../model/postSchema");
 const { userModel } = require("../model/userSchema");
+const tokenMiddleWare = require("../Controllers/tokenMiddleware");
 
 postRouter.post("/createPost", async (req, res) => {
   const { description, postImage, user, proFileImage, userName } = req.body;
@@ -23,7 +24,8 @@ postRouter.post("/createPost", async (req, res) => {
     console.log(error);
   }
 });
-postRouter.get("/post", async (req, res) => {
+
+postRouter.get("/post", tokenMiddleWare, async (req, res) => {
   try {
     const users = await postModel
       .find()

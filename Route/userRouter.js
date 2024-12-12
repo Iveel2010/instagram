@@ -1,14 +1,22 @@
 const Route = require("express");
 const userRouter = Route();
 const { userModel } = require("../model/userSchema");
+
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
 userRouter.post("/signup", async (req, res) => {
   const { userName, password, email, profileImage } = req.body;
   try {
+    const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = await userModel.create({
       userName,
-      password,
+      password: hashedPassword,
       email,
       profileImage,
+    });
+    const token = jwt.sign({ userId: user._id }, process.env.HOOK_HIDDEN_CODE, {
+      expiresIn: "24h",
     });
     res.send(newUser);
   } catch (error) {
@@ -71,4 +79,26 @@ userRouter.post("/unFollow", async (req, res) => {
     console.log(error);
   }
 });
+
+userRouter.post("/login", async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    const user = await userModel.findOne({ username });
+    if (!user) {
+      return res.send("err2");
+    }
+    const passwordMatch = await bcrypt.compare(password, user.password);
+
+    if (!passwordMatch) {
+      return res.send("err3");
+    }
+    const token = jwt.sign({ userId: user._id }, process.env.HOOK_HIDDEN_CODE, {
+      expiresIn: "24h",
+    });
+    res.status(200).json({ token });
+  } catch (error) {
+    res.send(error);
+  }
+});
+
 module.exports = userRouter;
