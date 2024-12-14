@@ -1,11 +1,11 @@
 const Route = require("express");
 const userRouter = Route();
 const { userModel } = require("../model/userSchema");
-
+const tokenMiddleWare = require("../Controllers/tokenMiddleware");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-userRouter.post("/signup", async (req, res) => {
+userRouter.post("/signup", tokenMiddleWare, async (req, res) => {
   const { userName, password, email, profileImage } = req.body;
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -80,7 +80,7 @@ userRouter.post("/unFollow", async (req, res) => {
   }
 });
 
-userRouter.post("/login", async (req, res) => {
+userRouter.post("/login", tokenMiddleWare, async (req, res) => {
   try {
     const { username, password } = req.body;
     const user = await userModel.findOne({ username });
