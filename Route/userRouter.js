@@ -20,7 +20,7 @@ userRouter.post("/signup", async (req, res) => {
       process.env.HOOK_HIDDEN_CODE,
       { expiresIn: "24h" }
     );
-    res.send(token);
+    res.json({ token });
   } catch (error) {
     res.send("err");
     console.log(error);
