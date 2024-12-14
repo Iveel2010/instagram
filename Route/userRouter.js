@@ -5,7 +5,7 @@ const tokenMiddleWare = require("../Controllers/tokenMiddleware");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-userRouter.post("/signup", tokenMiddleWare, async (req, res) => {
+userRouter.post("/signup", async (req, res) => {
   const { userName, password, email, profileImage } = req.body;
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -15,10 +15,12 @@ userRouter.post("/signup", tokenMiddleWare, async (req, res) => {
       email,
       profileImage,
     });
-    const token = jwt.sign({ userId: user._id }, process.env.HOOK_HIDDEN_CODE, {
-      expiresIn: "24h",
-    });
-    res.send(newUser);
+    const token = jwt.sign(
+      { userId: newUser._id, userName: newUser.userName },
+      process.env.HOOK_HIDDEN_CODE,
+      { expiresIn: "24h" }
+    );
+    res.send(token);
   } catch (error) {
     res.send("err");
     console.log(error);
@@ -80,7 +82,7 @@ userRouter.post("/unFollow", async (req, res) => {
   }
 });
 
-userRouter.post("/login", tokenMiddleWare, async (req, res) => {
+userRouter.post("/login", async (req, res) => {
   try {
     const { username, password } = req.body;
     const user = await userModel.findOne({ username });
