@@ -19,7 +19,7 @@ likeRouter.post("/like", async (req, res) => {
     //     select: "userName profileImage",
     //   },
     // });
-    res.send("done");
+    res.send({ message: "done" });
   } catch (error) {
     res.send({ error });
     console.log(error);
