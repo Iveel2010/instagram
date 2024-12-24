@@ -12,13 +12,13 @@ likeRouter.post("/like", async (req, res) => {
         likes: userId,
       },
     });
-    const newPopulatedLike = await likeModel.findById(userId).populate({
-      path: "likes",
-      populate: {
-        path: "userId",
-        select: "userName profileImage",
-      },
-    });
+    // const newPopulatedLike = await likeModel.findById(userId).populate({
+    //   path: "likes",
+    //   populate: {
+    //     path: "userId",
+    //     select: "userName profileImage",
+    //   },
+    // });
     res.send("done");
   } catch (error) {
     res.send({ error });
