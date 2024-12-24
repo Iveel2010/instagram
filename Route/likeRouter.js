@@ -5,10 +5,12 @@ const { likeModel } = require("../model/likeSchema");
 
 likeRouter.post("/like", async (req, res) => {
   const { userId, postId } = req.body;
+
   try {
-    const newlike = await likeModel.create({
-      userId,
-      postId,
+    await postModel.findByIdAndUpdate(postId, {
+      $pull: {
+        likes: userId,
+      },
     });
     const newPopulatedLike = await likeModel.findById(userId).populate({
       path: "likes",
@@ -17,13 +19,7 @@ likeRouter.post("/like", async (req, res) => {
         select: "userName profileImage",
       },
     });
-    res.send(comment);
-    await postModel.findByIdAndUpdate(postId, {
-      $addToSet: {
-        likes: newPopulatedLike,
-      },
-    });
-    res.send("hihi");
+    res.send("done");
   } catch (error) {
     res.send({ error });
     console.log(error);
