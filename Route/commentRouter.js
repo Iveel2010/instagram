@@ -58,7 +58,7 @@ commentRouter.get("/getComment/:postId", async (req, res) => {
     });
     res.send(comment);
   } catch (error) {
-    res.send("err");
+    res.send({ error });
     console.log(error);
   }
 });

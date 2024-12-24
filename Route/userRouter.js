@@ -22,7 +22,7 @@ userRouter.post("/signup", async (req, res) => {
     );
     res.json({ token });
   } catch (error) {
-    res.send("err");
+    res.send({ error });
     console.log(error);
   }
 });

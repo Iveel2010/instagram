@@ -10,15 +10,22 @@ likeRouter.post("/like", async (req, res) => {
       userId,
       postId,
     });
-    await postModel.findByIdAndUpdate(postId, {
-      $addToSet: {
-        likes: userId,
+    const newPopulatedLike = await likeModel.findById(userId).populate({
+      path: "likes",
+      populate: {
+        path: "userId",
+        select: "userName profileImage",
       },
     });
-
+    res.send(comment);
+    await postModel.findByIdAndUpdate(postId, {
+      $addToSet: {
+        likes: newPopulatedLike,
+      },
+    });
     res.send("hihi");
   } catch (error) {
-    res.send("err");
+    res.send({ error });
     console.log(error);
   }
 });
@@ -33,7 +40,7 @@ likeRouter.post("/unLike", async (req, res) => {
 
     res.send("hihi");
   } catch (error) {
-    res.send("err");
+    res.send({ error });
     console.log(error);
   }
 });
