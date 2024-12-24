@@ -8,7 +8,7 @@ likeRouter.post("/like", async (req, res) => {
 
   try {
     await postModel.findByIdAndUpdate(postId, {
-      $pull: {
+      $addToSet: {
         likes: userId,
       },
     });
